@@ -1,66 +1,50 @@
-# BMP Reader Library
+# Optimizations_VectorizationAndAlgebra
 
-This project is a simple BMP (Bitmap) file reader implemented in C++. It focuses on reading BMP files with a 14-byte file header (BITMAPFILEHEADER) and a 40-byte info header (BITMAPINFOHEADER). The reader does not support compression and is compatible with BMP images using 1, 4, 8, 16, 24, or 32 bits per pixel (bpp) formats.
+## Table of Contents
+- [Introduction](#introduction)
+- [Build and Run](#build-and-run)
+- [Example Output](#example-output)
+- [How does this work](#how-does-this-work)
 
-## Features
+## Introduction
+This program demonstrates the performance impact of vectorization and algebraic manipulations in C++. 
 
-- **Header**: Supports only the standard 14-byte BITMAPFILEHEADER header.
-- **Info Header**: Handles only the 40-byte BITMAPINFOHEADER structure.
-- **Bit Depth Support**: Works with BMP files using 1, 4, 8, 16, 24, or 32 bpp.
-- **No Compression**: Only supports uncompressed BMP files (BI_RGB).
+## Build and Run
+To clone and run this project, you'll need [Git](https://git-scm.com) and [CMake](https://cmake.org/) installed on your computer. From your command line:
 
-## How to Use the Library
+```bash
+# Clone this repository
+$ git clone https://github.com/Hayk10002/Optimizations_VectorizationAndAlgebra
 
-You can use the BMP reader library in two main ways:
+# Go into the repository
+$ cd Optimizations_VectorizationAndAlgebra
 
-### Option 1: Copy Header File
+# Generate the build files
+$ cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
 
-If you prefer a minimal setup:
+# Build the project
+$ cmake --build build --config Release
 
-1. Copy the `bmpreader.hpp` file into your project's source directory.
-2. Include it in your source code:
-
-`#include "bmpreader.hpp"`
-
-You're ready to use the BMP reader classes and functions.
-
-### Option 2: Add as a Subdirectory (CMake Integration)
-
-For a more modular and maintainable approach:
-
-1. Clone this project into your project directory, for example:
-
-```bash 
-git clone https://github.com/Hayk10002/bmpreader.git external/bmpreader
+# Then, run the executable generated in the `build` directory.
+$ your/path/to/exe/runner.exe
 ```
 
-2. In your project's `CMakeLists.txt`, add the following lines:
+## Example Output
 
-```cmake
-add_subdirectory(external/bmpreader)  
-target_link_libraries(your_project PRIVATE bmpreader)
+```
+Running: no vectorization, no fast math
+Elapsed time: 77ms
+Running: no vectorization, fast math
+Elapsed time: 18ms
+Running: vectorization, no fast math
+Elapsed time: 52ms
+Running: vectorization, fast math
+Elapsed time: 10ms
 ```
 
-3. Then, include the header in your source files using:
+## How does this work
+This project compiles a single c++ program with different compiler flags to demonstrate the effects of vectorization and fast math optimizations. The program performs a simple numerical computation and measures the elapsed time for each configuration.
 
-```cpp
-#include <bmpreader.hpp>
-```
+The vectorization makes the computer use SIMD (Single Instruction, Multiple Data) instructions to perform operations on multiple data points simultaneously, which can significantly speed up numerical computations.
 
-## Example Usage
-
-Here is a basic example of how to use the BMP reader to read a BMP file and access its header information.
-
-```cpp
-#include "bmpreader.hpp"
-
-int main() {
-    Image image(readBitmapImage("filename.bmp"));
-    
-    std::cout << "Width: " << image.width << '\n';
-    std::cout << "Height: " << image.height << '\n';
-
-    std::cout << "Pixel value (R,G,B) at coordinates (0, 0): (" << (unsigned int)image.pixels[0].red << ", " << (unsigned int)image.pixels[0].green << ", " << (unsigned int)image.pixels[0].blue << ")\n"; 
-    return 0;
-}
-```
+The fast math optimizations allow the compiler to make certain assumptions about floating-point arithmetic, which leads to faster computation.
